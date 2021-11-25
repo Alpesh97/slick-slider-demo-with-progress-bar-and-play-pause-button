@@ -1,0 +1,253 @@
+<!Doctype html>
+<html>
+
+<head>
+    <title>Animated slick slider</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=No">
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick.css" />
+    <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick-theme.css" />
+    <style>
+        body {
+        background: #232323;
+    }
+
+    section {
+        display: flex;
+        align-content: center;
+        justify-content: center;
+        height: 30vh;
+        margin-top:150px;
+    }
+
+    /* for slick slider */
+    .slider.slick-dotted.slick-slider{
+        max-width: 768px;
+        margin: 0 auto 5px;
+    }
+    .slider div{
+        background: #5e5532;    
+        color: #fff;
+        font-size: 35px;
+        font-weight: bold;
+        text-align: center;
+        height: 100%;
+    }
+    .slider .slick-dots{
+        bottom:-45px;
+    }
+    .slider .slick-dots li button:before{
+        color: #fff;
+        content: '•';
+        background: #fff;
+        border-radius: 50%;
+        font-size: 10px;
+        line-height: 12px;
+        width: 10px;
+        height: 10px;
+    }
+    .slick-dots .animated-dot + li{
+        display: none;
+    }
+    .slick-dots .animated-dot{
+        background-image: url("https://img.icons8.com/plasticine/100/000000/play.png");
+        background-repeat: no-repeat;
+        background-size: cover;
+        height: 14px;
+        width: 16px;
+        }
+
+    /* progress bar */
+    .slider-progress {
+      width: 100%;
+      height: 3px;
+      background: #eee;
+      max-width: 768px;
+      margin: 0 auto;
+    }
+    .slider-progress .progress {
+      width: 0%;
+      height: 3px;
+      background: #000;
+    }
+      
+    /* common slider-nav */
+     .slider .slick-prev, .slider .slick-next{
+        height: 18px;
+        width: 18px;
+        position: absolute;
+        top: auto;
+        transform: none;
+        bottom: -38px;
+        left: auto;
+        right: auto;
+        cursor: pointer;
+        z-index: 2;
+    }
+    .slider .slick-arrow:before{
+        display: none;
+    }
+    .slider .slick-prev{
+        background: url("https://img.icons8.com/office/16/000000/back.png") no-repeat;
+        background-size: contain;
+    }
+    .slider .slick-next{
+        background: url("https://img.icons8.com/office/16/000000/forward.png") no-repeat;
+        background-size: contain;
+        background-position: right;
+    }
+
+    </style>
+</head>
+
+<body>
+    <section class="slider-wrapper">
+        <div class="slider">
+            <div>1</div>
+            <div>2</div>
+            <div>3</div>
+            <div>4</div>
+            <div>5</div>
+            <div>6</div>
+        </div>
+    </section>
+    <div class="slider-progress">
+        <div class="progress"></div>
+    </div>
+    <script src="https://code.jquery.com/jquery-3.4.1.min.js"></script>
+    <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/slick-carousel/1.9.0/slick.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.css" />
+<script src="https://cdnjs.cloudflare.com/ajax/libs/malihu-custom-scrollbar-plugin/3.1.5/jquery.mCustomScrollbar.min.js"></script>  
+    <script>
+        
+    // To add class on last slide
+    function init_class(current, last, class_nm) {
+        if (jQuery('.industries-listing.slick-slider').length) {
+            var currentItem = current;
+            var last_item = last - 1;
+            if (currentItem >= 1 && currentItem != last_item) {
+                class_nm.addClass("init-slide");
+            }
+            if (jQuery(class_nm).find(".slick-slide[data-slick-index='" + last_item + "']").attr('aria-hidden') != 'true') {
+                class_nm.addClass("init-slide-last");
+                class_nm.removeClass("init-slide");
+            } else {
+                // class_nm.removeClass("init-slide");
+                class_nm.removeClass("init-slide-last");
+            }
+        }
+    }
+
+    function slider_nav(){
+        if ($(".slider.slick-slider").length) {
+            var dots_width = $(".slider .slick-dots li").outerWidth();
+            var dots_left_position = $(".slider .slick-dots li").first().position().left;
+            var nav_left_position = (dots_left_position - dots_width);
+            var nav_right_position = (dots_left_position - dots_width) - 6; 
+
+            $(".slider .slick-prev").css({left: nav_left_position +'px'});   
+            $(".slider .slick-next").css({right: nav_right_position +'px'});
+        }
+    }
+
+$(function() {
+
+        //for slick slider
+        $('.slider').slick({
+            slidesToShow: 1,
+            slidesToScroll: 1,
+            dots: true,
+            arrows: true,
+            autoplay: true,
+        }).on("swipe", function(event) {
+                var currentSlideIndex = jQuery('.industries-listing .slick-current').attr('data-slick-index');
+                var last_item = jQuery('.industries-listing .slick-slide').length;
+                var _currentclass = jQuery(".industries-listing");
+                init_class(currentSlideIndex, last_item, _currentclass);
+            });
+
+        $(".slider .slick-dots").append("<li class='animated-dot'><li>");
+        $(".slider .slick-dots li.animation-dot").next("li").remove();
+  
+        $(".slick-dots .animated-dot").click(function() {
+            $(this).toggleClass("play");
+            if ($(this).hasClass("play")) {
+                isPause = true;
+                $(this).css('background-image', 'url(https://img.icons8.com/plasticine/100/000000/pause.png)');
+                $('.slider').slick('slickPause');
+                $bar.css({
+                    width: 100 + "%"
+                });
+            } else {
+                isPause = false;
+                $(this).css('background-image', '');
+                $('.slider').slick('slickPlay');
+            }
+        });
+
+
+        var time = 2;
+        var $bar,
+            isPause,
+            tick,
+            percentTime;
+
+        $bar = $('.slider-progress .progress');
+
+        function startProgressbar() {
+            resetProgressbar();
+            percentTime = 0;
+            isPause = false;
+            tick = setInterval(interval, 10);
+        }
+
+        function interval() {
+            if ($(".slick-dots .animated-dot").hasClass("play")) {
+                isPause = true;
+            }
+            if (isPause === false) {
+                percentTime += 1 / (time + 0.1);
+                $bar.css({
+                    width: percentTime + "%"
+                });
+                if (percentTime >= 100) {
+                    $(".slider").slick('slickNext');
+                    startProgressbar();
+                }
+            }
+        }
+
+        function resetProgressbar() {
+            $bar.css({
+                width: 0 + '%'
+            });
+            clearTimeout(tick);
+        }
+
+        startProgressbar();
+
+        $(".slider").on("beforeChange", function() {
+            resetProgressbar();
+            startProgressbar();
+            $bar.css({
+                width: 100 + "%"
+            });
+        });
+  
+    slider_nav();
+
+    });
+$(window).load(function(){
+  $(".mcs-horizontal").mCustomScrollbar({
+    axis:"x",
+    theme:"dark-thick",
+    autoExpandScrollbar:true,
+    advanced:{autoExpandHorizontalScroll:true},
+    updateOnContentResize:true,
+    scrollbarPosition: 'outside',
+    scrollInertia: 200
+  });
+});
+    </script>
+</body>
+
+</html>
